@@ -44,27 +44,27 @@ jobs:
       run: |
         dir .pio/build/seeed_xiao_esp32s3/ 
         cd .pio/build/seeed_xiao_esp32s3/
-        python -m esptool --chip esp32s3 merge_bin  -o seeed_xiao_esp32s3_ledservo.bin.bin  --flash_mode dio  --flash_freq 40m  --flash_size 4MB 0x0000 bootloader.bin  0x8000 partitions.bin  0xe000 ~/.platformio/packages/framework-arduinoespressif32/tools/partitions/boot_app0.bin  0x10000 firmware.bin
+        python -m esptool --chip esp32s3 merge_bin  -o seeed_xiao_esp32s3_ledservo.bin  --flash_mode dio  --flash_freq 40m  --flash_size 4MB 0x0000 bootloader.bin  0x8000 partitions.bin  0xe000 ~/.platformio/packages/framework-arduinoespressif32/tools/partitions/boot_app0.bin  0x10000 firmware.bin
     - name: Debug merged firmware
-      run: ls -l .pio/build/seeed_xiao_esp32s3_ledservo.bin/
+      run: ls -l .pio/build/seeed_xiao_esp32s3_ledservo/
 
     - name: Check for merged firmware
       run: |
-        if [ ! -f .pio/build/seeed_xiao_esp32s3_ledservo.bin/seeed_xiao_esp32s3_ledservo.bin ]; then
+        if [ ! -f .pio/build/seeed_xiao_esp32s3_ledservo/seeed_xiao_esp32s3_ledservo.bin ]; then
           echo "Merged firmware binary not found!"
           exit 1
         fi
     - uses: actions/upload-artifact@v4
       with:
         name: merged-firmware
-        path: .pio/build/seeed_xiao_esp32s3_ledservo.bin/seeed_xiao_esp32s3_ledservo.bin
+        path: .pio/build/seeed_xiao_esp32s3_ledservo/seeed_xiao_esp32s3_ledservo.bin
 
     - name: Push to youseetoo Webtool
       uses: dmnemec/copy_file_to_another_repo_action@main
       env:
         API_TOKEN_GITHUB: ${{ secrets.API_TOKEN_GITHUB }}
       with:
-        source_file: '.pio/build/seeed_xiao_esp32s3_ledservo.bin/seeed_xiao_esp32s3_ledservo.bin'
+        source_file: '.pio/build/seeed_xiao_esp32s3_ledservo/seeed_xiao_esp32s3_ledservo.bin'
         destination_repo: 'youseetoo/youseetoo.github.io'
         destination_folder: 'static/firmware_build'
         user_email: 'bene.d@gmx.de'
